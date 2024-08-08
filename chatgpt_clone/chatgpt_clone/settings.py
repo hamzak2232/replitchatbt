@@ -57,7 +57,7 @@ WSGI_APPLICATION = 'chatgpt_clone.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': r'C:\Users\Hamza\Documents\AIChatBot2 - Copy (4) - Copy - Copy\chatgpt_clone\db2.db',
+        'NAME': r'chatgpt_clone/db2.db',
     }
 }
 
