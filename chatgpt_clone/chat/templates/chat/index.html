@@ -62,6 +62,7 @@
         .chat-input {
             margin-top: 10px;
             display: flex;
+            align-items: center;
         }
 
         .chat-input input[type="text"] {
@@ -88,7 +89,7 @@
             background-color: #0073e6;
         }
 
-        .upload-section {
+        .upload-section, .mode-selector {
             margin-bottom: 20px;
             text-align: center;
         }
@@ -111,10 +112,25 @@
             background-color: #0073e6;
         }
 
+        .mode-selector select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            background-color: #fff;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="mode-selector">
+            <label for="chat-mode">Select Chat Mode:</label>
+            <select id="chat-mode">
+                <option value="regular">Regular Chat</option>
+                <option value="rag">RAG Chat</option>
+            </select>
+        </div>
         <div class="upload-section">
             <input type="file" id="file-upload" accept=".txt">
             <label for="file-upload" class="upload-label">Upload Text File</label>
@@ -134,6 +150,7 @@
             const userInput = document.getElementById('user-input');
             const sendButton = document.getElementById('send-button');
             const fileUpload = document.getElementById('file-upload');
+            const chatModeSelect = document.getElementById('chat-mode');
 
             // Function to add a message to the chat box
             function addMessage(content, role) {
@@ -154,6 +171,8 @@
             // Event listener for the send button
             sendButton.addEventListener('click', function() {
                 const message = userInput.value.trim();
+                const chatMode = chatModeSelect.value;
+
                 if (message) {
                     addMessage(message, 'user');
                     userInput.value = '';
@@ -165,7 +184,7 @@
                             'Content-Type': 'application/json',
                             'X-CSRFToken': getCookie('csrftoken')
                         },
-                        body: JSON.stringify({ message: message })
+                        body: JSON.stringify({ message: message, chat_mode: chatMode })
                     })
                     .then(response => response.json())
                     .then(data => {
