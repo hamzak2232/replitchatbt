@@ -173,11 +173,11 @@ def save_to_db(user_message, chatbot_response):
         print(f"Error saving to database: {e}")
 
 # Function to get chatbot response
-def chatbot_response(user_query, use_history=False):
-    # Check if RAG is possible
-    if index is not None and vectorizer is not None:
+def chatbot_response(user_query, use_history=False, use_rag=False):
+    # Check if RAG is possible and requested
+    if use_rag and index is not None and vectorizer is not None:
         retrieved_texts = retrieve_documents_faiss(user_query, index, vectorizer, documents)
-        # Generate a response using RAG if applicable
+        # Generate a response using RAG
         response = generate_response(user_query, retrieved_texts, use_history)
     else:
         # Generate a response without RAG
@@ -219,12 +219,14 @@ def send_message(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         user_query = data.get('message', '')
+        chat_mode = data.get('chat_mode', 'regular')
 
-        # Decide whether to use history or not
+        # Decide whether to use history and/or RAG
         use_history = True if user_query.strip().lower() in ['what was my first prompt?', 'can you recall our conversation?'] else False
+        use_rag = chat_mode == 'rag'
 
-        # Generate a response using RAG if possible, otherwise regular response
-        response = chatbot_response(user_query, use_history)
+        # Generate a response based on the selected mode
+        response = chatbot_response(user_query, use_history, use_rag)
 
         # Save to the database
         save_to_db(user_query, response)
