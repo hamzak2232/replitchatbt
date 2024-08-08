@@ -23,7 +23,7 @@ vectorizer = None
 index = None
 
 # Establish a connection to the SQLite database
-db_path = r"C:\Users\Hamza\Documents\AIChatBot2 - Copy (4) - Copy\chatgpt_clone\db2.db"
+db_path = r"chatgpt_clone/db2.db"
 
 # Function to load text files from a given directory
 def load_text_files(directory):
